@@ -1,17 +1,18 @@
 import Vue from 'vue'
 import App from './App.vue'
 import router from "@/router"
-import TypeNav from "@/pages/Home/TypeNav"
+import store from '@/store'
+import TypeNav from "@/components/TypeNav"
 
-import { reqCategoryList } from "@/api"
 
 //测试
 
-reqCategoryList()
+
 Vue.component(TypeNav.name, TypeNav)
 Vue.config.productionTip = false
 
 new Vue({
   render: h => h(App),
-  router
+  router,
+  store
 }).$mount('#app')
