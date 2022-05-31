@@ -29,11 +29,13 @@ export default new VueRouter({
         { path: "/register", component: Register, meta: { show: false } },
         { path: "/login", component: Login, meta: { show: false } },
         {
-            path: "/search/:keyword?", component: Search, meta: { show: true }, name: "search"
+            name: "search",
+            path: "/search/:keyword?", component: Search, meta: { show: true }
             , props: ($route) => ({
                 keyword: $route.params.keyword, k: $route.query.k
             })
         },
+
         //重定向到首页
         { path: "*", redirect: "/home" }
     ]

@@ -14,6 +14,9 @@ export default {
   name: 'App',
   components: {
     Header,Footer
+  },
+  mounted(){
+    this.$store.dispatch('categoryList')
   }
 }
 </script>

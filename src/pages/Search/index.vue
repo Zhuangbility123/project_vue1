@@ -1,13 +1,13 @@
 <template>
   <div>
-      <h1>{{$route.params.keyword}}---{{keyword}}</h1>
-      <h1>{{$route.query.k}}---{{k}}</h1>
+      <TypeNav></TypeNav>
   </div>
 </template>
 
 <script>
+import TypeNav from '@/components/TypeNav/index.vue';
 export default {
-  props:['keyword','k']
+    components: { TypeNav }
 }
 </script>
 
