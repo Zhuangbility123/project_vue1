@@ -1,9 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from "@/pages/Home"
-import Login from "@/pages/Login"
-import Register from "@/pages/Register"
-import Search from "@/pages/Search"
+import routes from './routes'
+import store from '@/store'
 Vue.use(VueRouter);
 //重写push方法
 let originPush = VueRouter.prototype.push
@@ -23,20 +21,39 @@ VueRouter.prototype.replace = function (location, resolve, reject) {
         originReplace.call(this, location, () => { }, () => { })
     }
 }
-export default new VueRouter({
-    routes: [
-        { path: "/home", component: Home, meta: { show: true } },
-        { path: "/register", component: Register, meta: { show: false } },
-        { path: "/login", component: Login, meta: { show: false } },
-        {
-            name: "search",
-            path: "/search/:keyword?", component: Search, meta: { show: true }
-            , props: ($route) => ({
-                keyword: $route.params.keyword, k: $route.query.k
-            })
-        },
-
-        //重定向到首页
-        { path: "*", redirect: "/home" }
-    ]
+let router = new VueRouter({
+    routes,
+    scrollBehavior(to, from, savedPosition) {
+        if (savedPosition) {
+            return savedPosition
+        } else {
+            return { x: 0, y: 0 }
+        }
+    }
 })
+router.beforeEach(async (to, from, next) => {
+    // next()
+    let token = store.state.user.token
+    let name = store.state.user.userInfo.name
+    if (token) {
+        if (to.path == '/login' || to.path == '/register') {
+            next('/')
+        } else {
+            if (name) {
+                next()
+            } else {
+                try {
+                    await store.dispatch('getUserInfo')
+                    next()
+                } catch (error) {
+                    await store.dispatch('userLogout')
+                    next('/login')
+                }
+            }
+        }
+    } else {
+        next()
+    }
+})
+
+export default router

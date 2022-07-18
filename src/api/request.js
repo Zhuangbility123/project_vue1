@@ -3,6 +3,7 @@ import axios from 'axios'
 import nprogress from 'nprogress'
 //引入nprogress样式
 import "nprogress/nprogress.css"
+import store from '@/store'
 //利用axios对象的方法create,创建axios实例
 const requests = axios.create({
     //配置对象
@@ -15,6 +16,12 @@ const requests = axios.create({
 requests.interceptors.request.use((config) => {
     //config配置对象有个重要属性headers
     nprogress.start()
+    if (store.state.detail.uuid_token) {
+        config.headers.userTempId = store.state.detail.uuid_token
+    }
+    if (store.state.user.token) {
+        config.headers.token = store.state.user.token
+    }
     return config
 })
 //响应拦截器

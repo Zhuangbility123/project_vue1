@@ -4,7 +4,7 @@ import nprogress from 'nprogress'
 //引入nprogress样式
 import "nprogress/nprogress.css"
 //利用axios对象的方法create,创建axios实例
-const requests = axios.create({
+const mockRequest = axios.create({
     //配置对象
     //基础路径，发请求的时候，路径当中会出现api
     baseURL: "/mock",
@@ -12,13 +12,13 @@ const requests = axios.create({
     timeout: 5000
 })
 //请求拦截器
-requests.interceptors.request.use((config) => {
+mockRequest.interceptors.request.use((config) => {
     //config配置对象有个重要属性headers
     nprogress.start()
     return config
 })
 //响应拦截器
-requests.interceptors.response.use((res) => {
+mockRequest.interceptors.response.use((res) => {
     nprogress.done()
     return res.data
 }, (error) => {
@@ -26,4 +26,4 @@ requests.interceptors.response.use((res) => {
 }
 )
 
-export default requests
+export default mockRequest

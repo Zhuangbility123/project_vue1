@@ -1,43 +1,47 @@
 <template>
-  <header class="header">
-            <!-- 头部的第一行 -->
-            <div class="top">
-                <div class="container">
-                    <div class="loginList">
-                        <p>尚品汇欢迎您！</p>
-                        <p>
-                            <span>请</span>
-                            <router-link to="/login">登录</router-link>
-                            <router-link class="register" to="/register">免费注册</router-link>
-                        </p>
-                    </div>
-                    <div class="typeList">
-                        <a href="###">我的订单</a>
-                        <a href="###">我的购物车</a>
-                        <a href="###">我的尚品汇</a>
-                        <a href="###">尚品汇会员</a>
-                        <a href="###">企业采购</a>
-                        <a href="###">关注尚品汇</a>
-                        <a href="###">合作招商</a>
-                        <a href="###">商家后台</a>
-                    </div>
+    <header class="header">
+        <!-- 头部的第一行 -->
+        <div class="top">
+            <div class="container">
+                <div class="loginList">
+                    <p>尚品汇欢迎您！</p>
+                    <p v-if="!userName"> 
+                        <span>请</span>
+                        <router-link to="/login">登录</router-link>
+                        <router-link class="register" to="/register">免费注册</router-link>
+                    </p>
+                    <p v-else> 
+                        <a>{{userName}}</a>
+                        <a class="register" @click="logout">退出登录</a>
+                    </p>
+                </div>
+                <div class="typeList">
+                    <a href="###">我的订单</a>
+                    <a href="###">我的购物车</a>
+                    <a href="###">我的尚品汇</a>
+                    <a href="###">尚品汇会员</a>
+                    <a href="###">企业采购</a>
+                    <a href="###">关注尚品汇</a>
+                    <a href="###">合作招商</a>
+                    <a href="###">商家后台</a>
                 </div>
             </div>
-            <!--头部第二行 搜索区域-->
-            <div class="bottom">
-                <h1 class="logoArea">
-                    <router-link class="logo" title="尚品汇" to="/home" >
-                        <img src="./images/logo.png" alt="">
-                    </router-link>
-                </h1>
-                <div class="searchArea">
-                    <form action="###" class="searchForm">
-                        <input type="text" id="autocomplete" class="input-error input-xxlarge" v-model="keyword" />
-                        <button class="sui-btn btn-xlarge btn-danger" type="button" @click="goSearch">搜索</button>
-                    </form>
-                </div>
+        </div>
+        <!--头部第二行 搜索区域-->
+        <div class="bottom">
+            <h1 class="logoArea">
+                <router-link class="logo" title="尚品汇" to="/home">
+                    <img src="./images/logo.png" alt="">
+                </router-link>
+            </h1>
+            <div class="searchArea">
+                <form action="###" class="searchForm">
+                    <input type="text" id="autocomplete" class="input-error input-xxlarge" v-model="keyword" />
+                    <button class="sui-btn btn-xlarge btn-danger" type="button" @click="goSearch">搜索</button>
+                </form>
             </div>
-        </header>
+        </div>
+    </header>
 
 </template>
 
@@ -49,9 +53,8 @@ export default {
             keyword:''
         }
     },
-    methods:{
-        goSearch(){
-            //路由传参
+    methods: {
+        //路由传参
             // this.$router.push('/search/'+this.keyword+"?k="+this.keyword.toUpperCase())  //字符串
             //模板字符串
             // this.$router.push(`/search/${this.keyword}?k=${this.keyword.toUpperCase()}`)
@@ -62,14 +65,33 @@ export default {
             // ,()=>{})
             //路由组件传递props
              //代表的是如果有query参数也带过去
+        goSearch(){
             if (this.$route.query) {
-                let loction = { name:"search", params: { keyword: this.keyword || undefined } }
-                loction.query = this.$route.query
-                this.$router.push(loction)
+                let location = { name:"search", params: { keyword: this.keyword || undefined } }
+                location.query = this.$route.query
+                this.$router.push(location)
             }
             
+        },
+        async logout() {
+            try {
+                await this.$store.dispatch('userLogout')
+                this.$router.push('/home')
+            } catch (error) {
+                
+            }
+        }
+
+    },
+    mounted() {
+        this.$bus.$on('clear',()=>{this.keyword = ''})
+    },
+    computed: {
+        userName() {
+            return this.$store.state.user.userInfo.name
         }
     }
+
 }
 </script>
 
