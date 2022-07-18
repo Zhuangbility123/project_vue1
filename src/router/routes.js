@@ -14,25 +14,45 @@ import groupOrder from '@/pages/Center/groupOrder'
 export default [
     {
         path: "/center", component: Center, meta: { show: true },
-        redirect:'/center/myorder',
+        redirect: '/center/myorder',
         children: [
             {
                 path: 'myorder',
                 component: myOrder
             },
             {
-                path:'groupOrder',
-                component:groupOrder
+                path: 'groupOrder',
+                component: groupOrder
             }
         ]
     },
     { path: "/paysuccess", component: PaySuccess, meta: { show: true } },
-    { path: "/pay", component: Pay, meta: { show: true } },
-    { path: "/trade", component: Trade, meta: { show: true } },
-    { path: "/shopcart", component: ShopCart, meta: { show: true } },
+    {
+        path: "/pay", component: Pay, meta: { show: true },
+        beforeEnter: (to, from, next) => {
+            if (from.path == '/trade') {
+                next()
+            } else {
+                next(false)
+            }
+        }
+    },
+    {
+        path: "/trade", component: Trade, meta: { show: true }, beforeEnter: (to, from, next) => {
+            if (from.path == '/shopcart') {
+                next()
+            } else {
+                next(false)
+            }
+        }
+    },
+    {
+        path: "/shopcart", component: ShopCart, meta: { show: true }
+    },
     { path: "/addcartsuccess", component: AddCartSuccess, meta: { show: true } },
     { path: "/detail/:skuId", component: Detail, meta: { show: true } },
-    { path: "/home", component: Home, meta: { show: true } },
+    //路由懒加载
+    { path: "/home", component: ()=>import('@/pages/Home'), meta: { show: true } },
     { path: "/register", component: Register, meta: { show: false } },
     { path: "/login", component: Login, meta: { show: false } },
     {

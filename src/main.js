@@ -7,7 +7,13 @@ import Carousel from '@/components/Carousel'
 import Pagination from '@/components/Pagination'
 import 'swiper/css/swiper.css'
 import * as API from '@/api'
+import VueLazyload from 'vue-lazyload'
 import {Button,MessageBox} from 'element-ui'
+import gif from '@/assets/R-C.gif'
+import  '@/plugins/validate'
+Vue.use(VueLazyload,{
+  loading:gif
+})
 //全局组件 组件名 哪个组件
 Vue.component(TypeNav.name, TypeNav)
 Vue.component(Carousel.name, Carousel)
